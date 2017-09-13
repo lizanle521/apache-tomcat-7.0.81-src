@@ -38,11 +38,27 @@ public class TestDigester {
         digester.addSetProperties("Person");
         // 保存在栈中
         digester.addObjectCreate("Person/Child","org.apache.catalina.util.Child");
-        digester.addSetProperties("Child");
+        digester.addSetProperties("Person/Child");
         // 调用栈中第一个对象Person的add方法，将Person/Child节点对应的Child对象 add 到Person中
+        //digester.addSetNext("Person/Child","add"); 不添加参数也会自动判断参数类型
+        // 调用节点的方法，方法参数类型是org.apache.catalina.util.Child
         digester.addSetNext("Person/Child","add");
         Person parse = (Person)digester.parse(inputStream);
 
         System.out.println(parse.toString());
+    }
+
+    /**
+     * 更加简洁明了，封装了RuleSet可以解释固定不变的xml
+     * @throws IOException
+     * @throws SAXException
+     */
+    @Test
+    public void testRuleSet() throws IOException, SAXException {
+        InputStream inputStream = TestDigester.class.getResourceAsStream("Person.xml");
+        Digester digester = new Digester();
+        digester.addRuleSet(new RuleSet());
+        Object parse = digester.parse(inputStream);
+        System.out.println(parse);
     }
 }

@@ -10,7 +10,7 @@ public class Person {
     private String name;
     private Integer age;
     private Integer height;
-
+    private List<Person> personList = new ArrayList<>();
     private List<Child> childList = new ArrayList<>();
 
     public String getName() {
@@ -47,6 +47,10 @@ public class Person {
 
     public void add(Child child){
         this.childList.add(child);
+    }
+
+    public void add(Person person){
+        this.personList.add(person);
     }
 
     @Override
