@@ -311,6 +311,22 @@ public class Catalina {
         digester.setFakeAttributes(fakeAttributes);
         digester.setUseContextClassLoader(true);
 
+        /**
+         * 通过模式和创建对象的类进行调用
+         public void addObjectCreate( String pattern , Class class )
+         public void addObjectCreate( String pattern , String className)
+         在XML中通过属性指定类进行实例化的重载
+         public void addObjectCreate( String pattern , String className , String attributeName )
+         public void addObjectCreate(String pattern , String attributeName , Class class )
+
+         设置属性
+         public void addSetProperties( String pattern )
+         调用方法
+         public void addCallMethod(String pattern , String methodName )
+         创建对象之间的联系
+         public void addSetNext ( String pattern , String methodName )
+         */
+
         // Configure the actions we will be using
         digester.addObjectCreate("Server",
                                  "org.apache.catalina.core.StandardServer",
@@ -541,7 +557,6 @@ public class Catalina {
     public void load() {
 
         long t1 = System.nanoTime();
-
         initDirs();
 
         // Before digester - it may be needed
