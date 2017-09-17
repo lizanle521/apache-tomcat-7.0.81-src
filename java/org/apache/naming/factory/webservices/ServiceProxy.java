@@ -1,3 +1,4 @@
+package org.apache.naming.factory.webservices;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,7 +17,7 @@
  */ 
 
 
-package org.apache.naming.factory.webservices;
+
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
