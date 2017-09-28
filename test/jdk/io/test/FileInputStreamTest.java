@@ -2,10 +2,7 @@ package jdk.io.test;
 
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Created by Lizanle on 2017/9/27.
@@ -37,6 +34,19 @@ public class FileInputStreamTest {
             sb.append(new String(buffer));
         }
         System.out.println(sb.toString());
+    }
+
+    @Test
+    public void fileReaderFileWriter() throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(this.getClass().getResource("a.txt").getFile()));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.getClass().getResource("b.txt").getFile()));
+        String s = "";
+        while ((s = bufferedReader.readLine()) != null){
+            bufferedWriter.write(s+"\n");
+        }
+        bufferedWriter.flush();
+        bufferedReader.close();
+        bufferedWriter.close();
     }
 
 
