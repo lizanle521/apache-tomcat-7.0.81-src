@@ -3,6 +3,7 @@ package jdk.io.test;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * Created by Lizanle on 2017/9/27.
@@ -47,6 +48,16 @@ public class FileInputStreamTest {
         bufferedWriter.flush();
         bufferedReader.close();
         bufferedWriter.close();
+    }
+
+    @Test
+    public void scannerTest() throws FileNotFoundException {
+        // 按照空格，tab键，换行符来切分内容
+        Scanner scanner = new Scanner(new BufferedReader(new FileReader(this.getClass().getResource("a.txt").getFile())));
+        while (scanner.hasNext())
+        {
+            System.out.println(scanner.next());
+        }
     }
 
 
