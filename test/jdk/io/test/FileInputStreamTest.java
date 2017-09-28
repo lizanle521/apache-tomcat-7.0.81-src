@@ -3,6 +3,7 @@ package jdk.io.test;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -57,6 +58,29 @@ public class FileInputStreamTest {
         while (scanner.hasNext())
         {
             System.out.println(scanner.next());
+        }
+    }
+
+    @Test
+    public void sannerTest2() throws Exception{
+        Scanner scanner = null;
+        try {
+            //可以从文件中读取基本类型和其他数据类型。除了char以外
+            scanner = new Scanner(new BufferedReader(new FileReader(this.getClass().getResource("b.txt").getFile())));
+            double sum = 0;
+            scanner.useLocale(Locale.US);
+            while (scanner.hasNext()){
+                if(scanner.hasNextDouble()) {
+                    sum += scanner.nextDouble();
+                }else{
+                    System.out.println(scanner.next());
+                }
+            }
+            System.out.println(sum);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            scanner.close();
         }
     }
 
