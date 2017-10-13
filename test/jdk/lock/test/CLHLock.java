@@ -85,8 +85,8 @@ public class CLHLock implements Lock {
     @Test
     public void test() {
         CLHLock lock = new CLHLock();
-        Thread thread1 = new Thread(new TestCLHLockThread(lock));
-        Thread thread2 = new Thread(new TestCLHLockThread(lock));
+        Thread thread1 = new Thread(new TestCLHLockThread(lock),"1");
+        Thread thread2 = new Thread(new TestCLHLockThread(lock),"2");
         ExecutorService executorService = Executors.newCachedThreadPool();
         executorService.submit(thread1);
         executorService.submit(thread2);
@@ -107,17 +107,9 @@ public class CLHLock implements Lock {
         @Override
         public void run() {
             while (true){
-                if(t){
-                    lock.lock();
-                    t = false;
-                    System.out.println("A");
-                    lock.unlock();
-                }else {
-                    lock.lock();
-                    t = true;
-                    System.out.println("B");
-                    lock.unlock();
-                }
+                lock.lock();
+                    System.out.println("A-----"+Thread.currentThread().getId());
+                lock.unlock();
             }
         }
     }
