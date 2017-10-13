@@ -17,7 +17,7 @@ public class SyncLockTest {
         }
     }
     static class LockRunner implements Runnable {
-        private ReentrantLock lock = new ReentrantLock();
+        private ReentrantLock lock = new ReentrantLock(true);
         private long v = 0;
         @Override
         public void run() {
