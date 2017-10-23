@@ -1,5 +1,7 @@
 package jdk.lock.test;
 
+import org.junit.Test;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
@@ -63,4 +65,5 @@ public class SyncLockTest {
         new Tester(new SynRunner(), 50);
         new Tester(new LockRunner(), 50);
     }
+
 }
