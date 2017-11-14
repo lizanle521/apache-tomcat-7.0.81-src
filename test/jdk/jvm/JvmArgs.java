@@ -28,12 +28,13 @@ public class JvmArgs {
 
         getRuntime().traceMethodCalls(true);
         testMethodCall(1);
+        try {
+            FinalizeObject finalizeObject = new FinalizeObject();
+        }finally {
 
-        FinalizeObject finalizeObject = new FinalizeObject();
-        for (int i = 0; i < 1000000000; i++) {
-            getRuntime().runFinalization();
-            Object object = new Object();
         }
+        Object b = new Object();
+        System.gc();
 
         getRuntime().addShutdownHook(new Thread(){
             @Override
@@ -42,7 +43,7 @@ public class JvmArgs {
             }
         });
         // halt 会让jvm不会调用shutDownHook
-        getRuntime().halt(0);
+        //getRuntime().halt(0);
     }
 
     public static void testMethodCall(int a){
