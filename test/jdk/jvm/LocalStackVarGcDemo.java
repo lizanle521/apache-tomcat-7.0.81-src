@@ -16,6 +16,8 @@ public class LocalStackVarGcDemo {
 
     @Test
     public void localGc2(){
+        //-XX:+PrintGCDetails -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime -XX:+UseConcMarkSweepGC
+        // -XX:+PrintVMOptions -XX:+PrintCommandLineFlags
         byte[] bytes = new byte[6 * 1024 * 1024];
         bytes = null;
         System.gc();
