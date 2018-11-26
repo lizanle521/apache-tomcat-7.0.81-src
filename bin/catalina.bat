@@ -32,11 +32,11 @@ rem   Registry, and is most conveniently maintained using the "tomcatXw.exe"
 rem   maintenance utility, where "X" is the major version of Tomcat you are
 rem   running.
 rem
-rem   CATALINA_HOME   May point at your Catalina "build" directory.
+rem   CATALINA_HOME   May point at your Catalina "build" directory.  CATALINA_HOME一般是tomcat安装的路径
 rem
 rem   CATALINA_BASE   (Optional) Base directory for resolving dynamic portions
 rem                   of a Catalina installation.  If not present, resolves to
-rem                   the same directory that CATALINA_HOME points to.
+rem                   the same directory that CATALINA_HOME points to.   CATALINA_BASE 是 tomcat实例运行的工作目录，没有指定的情况下则是和CATALINE_HOME一样
 rem
 rem   CATALINA_OPTS   (Optional) Java runtime options used when the "start",
 rem                   "run" or "debug" command is executed.
@@ -44,11 +44,15 @@ rem                   Include here and not in JAVA_OPTS all options, that should
 rem                   only be used by Tomcat itself, not by the stop process,
 rem                   the version command etc.
 rem                   Examples are heap size, GC logging, JMX ports etc.
-rem
+rem                   CATALINA_OPTS 一般是 tomcat使用的命令
+rem                   譬如开启tomcat远程debug:  CATALINA_OPTS= -server -Xdebug -Xnoagent -Djava.compiler=NONE -Duser.language=pt -Duser.country=BR
+rem                   -Xrunjdwp:transport=dt_socket,address=5000,server=y,suspend=n
+
 rem   CATALINA_TMPDIR (Optional) Directory path location of temporary directory
 rem                   the JVM should use (java.io.tmpdir).  Defaults to
 rem                   %CATALINA_BASE%\temp.
-rem
+rem                   默认 CATALINA_BASE\temp文件夹
+
 rem   JAVA_HOME       Must point at your Java Development Kit installation.
 rem                   Required to run the with the "debug" argument.
 rem
@@ -106,10 +110,12 @@ rem                   set TITLE=Tomcat.Cluster#1.Server#1 [%DATE% %TIME%]
 rem ---------------------------------------------------------------------------
 
 setlocal
-
+:: setLocal 和 endLocal是一对。在这一对关键字之间变量 的定义，环境变量的修改 都不会影响实际的环境变量
 rem Suppress Terminate batch job on CTRL+C
 if not ""%1"" == ""run"" goto mainEntry
+:: 如果参数不是 run的话跳转到 mainEntry
 if "%TEMP%" == "" goto mainEntry
+:: 执行命令的文件的名字  ~nx0
 if exist "%TEMP%\%~nx0.run" goto mainEntry
 echo Y>"%TEMP%\%~nx0.run"
 if not exist "%TEMP%\%~nx0.run" goto mainEntry
@@ -120,6 +126,7 @@ set RETVAL=%ERRORLEVEL%
 del /Q "%TEMP%\%~nx0.Y" >NUL 2>&1
 exit /B %RETVAL%
 :mainEntry
+:: 删除temp目录下的 catalina.bat.run ,打印错误，正常信息不打印
 del /Q "%TEMP%\%~nx0.run" >NUL 2>&1
 
 rem Guess CATALINA_HOME if not defined
@@ -141,6 +148,7 @@ goto end
 rem Copy CATALINA_BASE from CATALINA_HOME if not defined
 if not "%CATALINA_BASE%" == "" goto gotBase
 set "CATALINA_BASE=%CATALINA_HOME%"
+:: 如果CATALINA_BASE 没有设置则和 CATALINA_HOME一样
 :gotBase
 
 rem Ensure that any user defined CLASSPATH variables are not used on startup,
@@ -149,6 +157,7 @@ set CLASSPATH=
 
 rem Get standard environment variables
 if not exist "%CATALINA_BASE%\bin\setenv.bat" goto checkSetenvHome
+:: 设置环境变量
 call "%CATALINA_BASE%\bin\setenv.bat"
 goto setenvDone
 :checkSetenvHome
@@ -161,6 +170,7 @@ echo Cannot find "%CATALINA_HOME%\bin\setclasspath.bat"
 echo This file is needed to run this program
 goto end
 :okSetclasspath
+:: 设置路径变量
 call "%CATALINA_HOME%\bin\setclasspath.bat" %1
 if errorlevel 1 goto end
 

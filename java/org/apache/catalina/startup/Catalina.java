@@ -332,6 +332,7 @@ public class Catalina {
                                  "org.apache.catalina.core.StandardServer",
                                  "className");
         digester.addSetProperties("Server");
+        // 栈顶已经是 catalina对象了
         digester.addSetNext("Server",
                             "setServer",
                             "org.apache.catalina.Server");
@@ -628,8 +629,9 @@ public class Catalina {
 
             try {
                 inputSource.setByteStream(inputStream);
+                // 首先将Catalina对象 推入到栈顶，这样digester首次调用addSetNext的时候 是 调用Catalina的set方法
                 digester.push(this);
-                digester.parse(inputSource);
+                digester.parse(inputSource); // 在这里就已经实例化了 server service engine host 等对象
             } catch (SAXParseException spe) {
                 log.warn("Catalina.start using " + getConfigFile() + ": " +
                         spe.getMessage());
@@ -647,10 +649,10 @@ public class Catalina {
                 }
             }
         }
-
+        // server 和 catalina 互相持有对方的引用
         getServer().setCatalina(this);
 
-        // Stream redirection
+        // Stream redirection 输入流输出流重定向
         initStreams();
 
         // Start the new server

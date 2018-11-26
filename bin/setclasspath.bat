@@ -21,11 +21,12 @@ rem endorsed directory.
 rem ---------------------------------------------------------------------------
 
 rem Make sure prerequisite environment variables are set
-
+:: tomcat的debug模式是需要JAVA_HOME的
 rem In debug mode we need a real JDK (JAVA_HOME)
 if ""%1"" == ""debug"" goto needJavaHome
 
 rem Otherwise either JRE or JDK are fine
+:: 其他模式可用JRE_HOME,没有JRE_HOME还是可以用JAVA_HOME
 if not "%JRE_HOME%" == "" goto gotJreHome
 if not "%JAVA_HOME%" == "" goto gotJavaHome
 echo Neither the JAVA_HOME nor the JRE_HOME environment variable is defined
@@ -68,6 +69,7 @@ goto exit
 rem Don't override the endorsed dir if the user has set it previously
 if not "%JAVA_ENDORSED_DIRS%" == "" goto gotEndorseddir
 rem Set the default -Djava.endorsed.dirs argument
+:: 包升级替换机制变量路径,这个路径下的jar包被jvm读取，然后里边的存在的类会替代其他地方被加载的类,但是不能覆盖 java.lang包下的类。
 set "JAVA_ENDORSED_DIRS=%CATALINA_HOME%\endorsed"
 :gotEndorseddir
 
