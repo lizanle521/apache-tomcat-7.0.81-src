@@ -34,6 +34,7 @@ echo At least one of these environment variable is needed to run this program
 goto exit
 
 :needJavaHome
+
 rem Check if we have a usable JDK
 if "%JAVA_HOME%" == "" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\java.exe" goto noJavaHome
