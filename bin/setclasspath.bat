@@ -34,7 +34,6 @@ echo At least one of these environment variable is needed to run this program
 goto exit
 
 :needJavaHome
-
 rem Check if we have a usable JDK
 if "%JAVA_HOME%" == "" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\java.exe" goto noJavaHome
@@ -70,7 +69,7 @@ goto exit
 rem Don't override the endorsed dir if the user has set it previously
 if not "%JAVA_ENDORSED_DIRS%" == "" goto gotEndorseddir
 rem Set the default -Djava.endorsed.dirs argument
-:: 包升级替换机制变量路径,这个路径下的jar包被jvm读取，然后里边的存在的类会替代其他地方被加载的类,但是不能覆盖 java.lang包下的类。
+:: 包升级替换机制变量路径,这个路径下的jar包被jvm读取，然后里边的存在的类会替代其他地方被加载的jdk类,但是不能覆盖 java.lang包下的类。
 set "JAVA_ENDORSED_DIRS=%CATALINA_HOME%\endorsed"
 :gotEndorseddir
 
