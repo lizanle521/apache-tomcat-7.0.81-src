@@ -696,6 +696,7 @@ public class Catalina {
     public void start() {
 
         if (getServer() == null) {
+            // 初始化StandadServer 和 StandardService 以及 Connector 等实现了 LifeCycle接口的 组件
             load();
         }
 
@@ -708,6 +709,7 @@ public class Catalina {
 
         // Start the new server
         try {
+            //
             getServer().start();
         } catch (LifecycleException e) {
             log.fatal(sm.getString("catalina.serverStartFail"), e);

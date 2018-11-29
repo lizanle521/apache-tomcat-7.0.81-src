@@ -817,6 +817,7 @@ public abstract class AbstractEndpoint<S> {
     protected LimitLatch initializeConnectionLatch() {
         if (maxConnections==-1) return null;
         if (connectionLimitLatch==null) {
+            // maxConnections 参数，用于控制tcp连接数
             connectionLimitLatch = new LimitLatch(getMaxConnections());
         }
         return connectionLimitLatch;

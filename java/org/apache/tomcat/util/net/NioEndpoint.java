@@ -334,6 +334,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
 
     /**
      * Poller thread count.
+     * poller线程数，最大不超过2
      */
     protected int pollerThreadCount = Math.min(2,Runtime.getRuntime().availableProcessors());
     public void setPollerThreadCount(int pollerThreadCount) { this.pollerThreadCount = pollerThreadCount; }
@@ -539,13 +540,14 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             paused = false;
 
             // Create worker collection
+            // maxThreads线程参数 minSpareThreads参数的使用，用于线程池线程数控制
             if ( getExecutor() == null ) {
                 createExecutor();
             }
-
+            // maxConnections 参数，用于http连接数控制
             initializeConnectionLatch();
 
-            // Start poller threads
+            // Start poller threads poller线程启动
             pollers = new Poller[getPollerThreadCount()];
             for (int i=0; i<pollers.length; i++) {
                 pollers[i] = new Poller();
@@ -554,7 +556,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                 pollerThread.setDaemon(true);
                 pollerThread.start();
             }
-
+            // 最后启动accptor线程
             startAcceptorThreads();
         }
     }
@@ -662,7 +664,15 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             socket.configureBlocking(false);
             Socket sock = socket.socket();
             socketProperties.setProperties(sock);
-
+            // https://yq.aliyun.com/articles/2889?spm=5176.100239.blogcont39093.8.s7Uavb
+            // 这篇文章上说的，在之前某个版本 nioChannels里边可能存在相同channel对象
+            // 相同的channel对象 第一次设置了 socket1
+            // 第二次设置了socket2
+            // 然后channel对象 关联了不同的poller
+            // 在调用socket.getPoller的时候 获取到了不同的poller 和当前的 clientPoller不一致
+            // 再通过这不同的 poller获取到了对应的poller的selector,也是不同的
+            // 导致的相同的 clientPoller 在处理 socket的时候获取到了不同的selector,然后在操作别人的selector的时候
+            // 别人把selector的keys改掉了，出现了concurrentmodificationException
             NioChannel channel = nioChannels.poll();
             if ( channel == null ) {
                 // SSL setup
